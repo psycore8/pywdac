@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<SiPolicy xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PolicyType="Base Policy" xmlns="urn:schemas-microsoft-com:sipolicy">
+  <VersionEx>10.3.0.1</VersionEx>
+  <PolicyTypeID>{A244370E-44C9-4C06-B551-F6016E563076}</PolicyTypeID>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <Rules>
+    <Rule>
+      <Option>Enabled:Unsigned System Integrity Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Audit Mode</Option>
+    </Rule>
+  </Rules>
+  <FileRules>
+    <Allow ID="ID_ALLOW_ALL_PATHES_0" FriendlyName="Allow all pathes" FilePath="*" />
+	<Allow ID="ID_ALLOW_ALL_FILES_0" FriendlyName="Allow all files" FileName="*" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+  </FileRules>
+  <Settings>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
+      <Value>
+        <String>AllowAll</String>
+      </Value>
+    </Setting>
+  </Settings>
+</SiPolicy>

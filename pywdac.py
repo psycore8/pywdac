@@ -2,9 +2,10 @@ import argparse
 import os
 from shutil import copy
 from subprocess import call
+from datetime import datetime
 import utils.helper
 
-prog_version = '0.1.5'
+prog_version = '0.1.6'
 prog_header = f"""
              __    __  ___  _      ___ 
  _ __  _   _/ / /\\ \\ \\/   \\/_\\    / __\\
@@ -22,11 +23,12 @@ def main():
   tform = utils.helper.nstate
   print(f'{tform.HEADER}{prog_header}{tform.ENDC}')
   print(f'{tform.LINK}https://www.github.com/psycore8/pywdac{tform.ENDC}\n\n')
-
+  #print(f'{wdac_pol}')
   parser = argparse.ArgumentParser()
   parser.add_argument('-d', '--directory', help=f'Path to CodeIntegrity folder, where {wdac_pol} should be deployed')
   parser.add_argument('-r', '--reboot', action='store_true', help=f'Optional reboot after deployment, delayed for {prog_reboot_seconds} seconds')
   parser.add_argument('-u', '--undo', action='store_true', help=f'Deletes {wdac_pol} from CodeIntegrity folder')
+  parser.add_argument('-x', '--xml-template', help=f'This will convert an XML policy template into {wdac_pol}', required=False)
   args = parser.parse_args()
 
   prog_reboot = args.reboot
@@ -35,6 +37,28 @@ def main():
     exit()
   else:
     prog_directory = args.directory
+    if not args.xml_template:
+      pass
+    else:
+      if os.path.exists(f'{wdac_pol}'):
+        wdac_bin_filename, wdac_bin_extension = os.path.splitext(wdac_pol)
+        print(tform.TextOKBlue(f'{wdac_pol} exists, create a file backup...'))
+        new_filename = f'{wdac_bin_filename}-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}{wdac_bin_extension}'
+        os.rename(wdac_pol, new_filename)
+        if os.path.exists(new_filename):
+          print(tform.TextOKGreen(f'File renamed to {new_filename}'))
+          main.wdac_pol = new_filename
+        else:
+          print(tform.TextFail('Error! File not renamed.'))
+          exit()
+      else:
+        print(tform.TextOKBlue(f'trying to convert {args.xml_template} into {wdac_pol}...'))
+        call(f'powershell.exe \"ConvertFrom-CIPolicy -XmlFilePath \".\\{args.xml_template}\" -BinaryFilePath \"{wdac_pol}\"\"')
+        if os.path.exists(wdac_pol):
+          print(tform.TextOKGreen(f'File {wdac_pol} created!'))
+        else:
+          print(tform.TextFail(f'File not created'))
+          exit()
     print(tform.TextOKGreen('Directory argument given'))
     print(tform.TextOKBlue('Checking write permissions...'))
     if not os.access(prog_directory, os.W_OK):
