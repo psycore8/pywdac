@@ -5,7 +5,7 @@ from subprocess import call
 from datetime import datetime
 import utils.helper
 
-prog_version = '0.1.6'
+prog_version = '0.1.7'
 prog_header = f"""
              __    __  ___  _      ___ 
  _ __  _   _/ / /\\ \\ \\/   \\/_\\    / __\\
@@ -61,7 +61,7 @@ def main():
           exit()
     print(tform.TextOKGreen('Directory argument given'))
     print(tform.TextOKBlue('Checking write permissions...'))
-    if not os.access(prog_directory, os.W_OK):
+    if not utils.helper.check_dir_write_permission(prog_directory):
       print(tform.TextFail('Write access is denied for this folder!'))
       exit()
     else:

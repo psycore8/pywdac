@@ -1,5 +1,15 @@
 import re
-from os import getenv
+from os import getenv, path, remove
+
+def check_dir_write_permission(directory=str):
+    try:
+        testfile = path.join(directory, 'test.write_perm')
+        with open(testfile, 'w') as file:
+            file.write('TEST_WRITE_PERMISSION')
+        remove(testfile)
+        return True
+    except(IOError, PermissionError):
+        return False
 
 class nstate:
     HEADER = '\033[95m'
